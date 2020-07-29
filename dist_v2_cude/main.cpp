@@ -1,5 +1,6 @@
 #include "Kernel.h"
 #include <stdlib.h>
+#include <iostream>
 #define N 64
 
 float scale(int i, int n)

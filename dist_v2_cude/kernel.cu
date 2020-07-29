@@ -7,26 +7,21 @@
 #include <math.h>
 #define TPB 32
 
-__device__ float scale(int i, int n)
-{
-	return ((float)i) / (n - 1);
-}
-
 __device__ float distance(float x1, float x2)
 {
 	return sqrt((x2 - x1) * (x2 - x1));
 }
 
 // converted from serial app
-__global__ void distanceKernel(float* d_out, float ref, int len)
+__global__ void distanceKernel(float* d_out, float* d_in, int ref)
 {
 	const int i = blockIdx.x * blockDim.x + threadIdx.x;
-	const float x = scale(i, len);
+	const float x = d_in[i];
 	d_out[i] = distance(x, ref);
 	printf("i = %2d: dist from %f to %f.\n", i, ref, x, d_out[i]);
 }
 
-__global__ void distanceArray(float* out, float* in, float ref, int len)
+void distanceArray(float* out, float* in, float ref, int len)
 {
 	// Declare pointers to device arrays
 	float* d_in = 0;
